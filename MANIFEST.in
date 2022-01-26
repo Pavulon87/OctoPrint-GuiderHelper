@@ -1,0 +1,4 @@
+include README.md
+recursive-include octoprint_guiderhelper/templates *
+recursive-include octoprint_guiderhelper/translations *
+recursive-include octoprint_guiderhelper/static *
