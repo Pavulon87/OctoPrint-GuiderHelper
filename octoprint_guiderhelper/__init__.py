@@ -39,9 +39,10 @@ class GuiderHelperPlugin(octoprint.plugin.StartupPlugin,
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 try:
                     s.connect((self.host, self.port))
-                except Exception as e: 
-                    self.connected = False
-                    self._logger.error("something's wrong. Exception is %s" % (e))
+                except Exception as e:
+                    if self.connected is True:
+                      self.connected = False
+                      self._logger.error("something's wrong. Exception is %s" % (e))
                 else:
                     self.connected = True
                     cmd = self.commands.pop(0)
