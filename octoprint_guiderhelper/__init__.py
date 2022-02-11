@@ -97,11 +97,11 @@ class GuiderHelperPlugin(octoprint.plugin.StartupPlugin,
 
     def sent_gcode(self, comm_instance, phase, cmd, cmd_type, gcode, *args, **kwargs):
         if gcode:
-            if "M117" in gcode:
+            if gcode.startswith("M117"):
                 self.sendTcp(cmd)
-            elif "M118" in gcode:
+            elif gcode.startswith("M118"):
                 self.sendTcp(cmd)
-            elif "M300" in gcode:
+            elif gcode.startswith("M300"):
                 self.sendTcp(cmd)
         return cmd
     
@@ -109,11 +109,13 @@ class GuiderHelperPlugin(octoprint.plugin.StartupPlugin,
         if ( not line or line == "ok" ):
             return
         
-        if "M117" in line:
+        if line.startswith("M117"):
             self.sendTcp(line)
-        elif "M118" in line:
+        elif line.startswith("M118"):
             self.sendTcp(line)
-        elif "M300" in line:
+        elif line.startswith("M300"):
+            self.sendTcp(line)
+        elif line.startswith("// gcode"):
             self.sendTcp(line)
         return line
       
