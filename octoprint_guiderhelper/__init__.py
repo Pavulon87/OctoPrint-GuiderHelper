@@ -54,7 +54,7 @@ class GuiderHelperPlugin(octoprint.plugin.StartupPlugin,
 
     def sendTcp(self, command):
         if self.host != "" and self.port != 0 and self.connected is True:
-            self._logger.info("Queuing command: %s'" % (command))
+            self._logger.info("Queuing command: %s'" % (command.replace("// ","")))
             self.commands.append(command.replace("// ",""))
 
     def on_after_startup(self):
@@ -97,23 +97,23 @@ class GuiderHelperPlugin(octoprint.plugin.StartupPlugin,
 
     def sent_gcode(self, comm_instance, phase, cmd, cmd_type, gcode, *args, **kwargs):
         if gcode:
-            if gcode.startswith("M117"):
+            if cmd.startswith("M117"):
                 self.sendTcp(cmd)
-            elif gcode.startswith("M118"):
+            elif cmd.startswith("M118"):
                 self.sendTcp(cmd)
-            elif gcode.startswith("M300"):
+            elif cmd.startswith("M300"):
                 self.sendTcp(cmd)
         return cmd
     
     def received_gcode(self, comm, line, *args, **kwargs):
         if ( not line or line == "ok" ):
             return
-        
-        if line.startswith("M117"):
+
+        if line.startswith("// M117"):
             self.sendTcp(line)
-        elif line.startswith("M118"):
+        elif line.startswith("// M118"):
             self.sendTcp(line)
-        elif line.startswith("M300"):
+        elif line.startswith("// M300"):
             self.sendTcp(line)
         elif line.startswith("// gcode"):
             self.sendTcp(line)
